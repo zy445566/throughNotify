@@ -17,8 +17,9 @@ const testUnit = {
         let timer2 = setInterval(async ()=>{
             await client2.sendNotify({hello:'world'+ i});
             i++;
-            if(i>10){
+            if(i>3){
                 clearInterval(timer2)
+                service.forceShutdown()
             }
         },1000)
         
