@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+service NotifyService {
+    rpc ping (isOk) returns (isOk) {}
+    rpc keepNotify (isOk) returns (stream jsonData) {};
+    rpc sendNotify (jsonData) returns (isOk) {};
+}
+
+message isOk {
+    bool ok = 1;
+}
+
+message jsonData {
+   string json = 1;
+}
