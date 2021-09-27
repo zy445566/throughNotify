@@ -3,11 +3,15 @@ import {Service, Client} from '../index'
 
 const testUnit = {
     [Symbol('Service.Start')] : async function() {
-        const service  = new Service({
-            partnerList:[]
+        const service1  = new Service({
+            partnerList:['0.0.0.0:8081']
         })
-        const port = await service.start('0.0.0.0:8080')
-        const client1 = new Client({address:'0.0.0.0:8080'})
+        await service1.start('0.0.0.0:8080')
+        const service2  = new Service({
+            partnerList:['0.0.0.0:8080']
+        })
+        await service2.start('0.0.0.0:8081')
+        const client1 = new Client({address:'0.0.0.0:8081'})
         client1.keepNotify()
         client1.on('notify',(data)=>{
             console.log(data)
@@ -19,7 +23,8 @@ const testUnit = {
             i++;
             if(i>3){
                 clearInterval(timer2)
-                service.forceShutdown()
+                service1.forceShutdown()
+                service2.forceShutdown()
             }
         },1000)
         

@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { ServerWritableStream } from '@grpc/grpc-js/build/src/server-call'
-import {getProtoDescriptor}  from '../utils/index';
+import {getProtoDescriptor, hash256ByStr}  from '../utils/index';
 import * as grpc from '@grpc/grpc-js';
 import { ServiceClientConstructor } from '@grpc/grpc-js/build/src/make-client';
 import { getLogger, Logger } from 'log4js';
@@ -13,7 +13,7 @@ export class Service {
     private server:grpc.Server;
     private logger:Logger;
     private clientCallMap:Map<string, ServerWritableStream<any,any>>;
-
+    private beforeNotifyHash:string;
     constructor({
         partnerList
     }:{
@@ -76,6 +76,12 @@ export class Service {
                 });
             },
             sendNotify:async(call:ServerWritableStream<any,any>, callback:(error:Error,resp:MessageIsOk)=>void) => {
+                const nowNotifyHash = hash256ByStr(call.request.json);
+                if(this.beforeNotifyHash===nowNotifyHash) {
+                    return callback(null,{ok:true})
+                }
+                // 这里必须要在通知机器钱设置一致性，否则将会形成环状通知
+                this.beforeNotifyHash = nowNotifyHash;
                 // 同步伙伴机器
                 for(const partner of this.partnerList) {
                     try{
@@ -93,7 +99,7 @@ export class Service {
                         this.logger.error('sendNotify to client failed:%O', error)
                     }
                 }
-                callback(null,{ok:true})
+                return callback(null,{ok:true})
             }
         }
     }
