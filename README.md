@@ -6,7 +6,7 @@
 2. 服务集群同步消息通知下发
 3. 服务集群下发消息请求到已链接到服务端的客户端
 
-![消息传递结构说明图](./throughNotify.png)
+![消息传递结构说明图](https://raw.githubusercontent.com/zy445566/zy445566.github.io/master/throughNotify/throughNotify.png)
 
 # 使用方式
 ```js
