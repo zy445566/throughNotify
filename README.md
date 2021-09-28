@@ -20,8 +20,7 @@ const service2  = new Service({
 })
 await service2.start('0.0.0.0:8081')
 const client1 = new Client({address:'0.0.0.0:8081'})
-client1.keepNotify()
-client1.on('notify',(data)=>{
+client1.keepNotify((data)=>{
     console.log(data)
 })
 const client2 = new Client({address:'0.0.0.0:8080'})
@@ -31,7 +30,7 @@ let timer2 = setInterval(async ()=>{
     i++;
     if(i>3){
         clearInterval(timer2)
-        service1.forceShutdown()
+        service1.tryShutdown()
         service2.forceShutdown()
     }
 },1000)

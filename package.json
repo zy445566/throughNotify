@@ -1,6 +1,6 @@
 {
   "name": "throughnotify",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Net penetrates messages notify the cluster service",
   "main": "build/index.js",
   "scripts": {

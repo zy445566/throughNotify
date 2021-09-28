@@ -5,9 +5,8 @@ import { ServiceClientConstructor, ServiceClient } from '@grpc/grpc-js/build/src
 import {MessageIsOk, MessageJsonData} from '../type/index'
 import { getLogger, Logger } from 'log4js';
 import config from '../config/index'
-import {EventEmitter} from 'events'
 
-export class Client extends EventEmitter {
+export class Client {
     private client:ServiceClient;
     private logger:Logger;
     private address:string
@@ -16,7 +15,6 @@ export class Client extends EventEmitter {
     }:{
         address:string
     }) {
-        super();
         this.address = address
         const notifyServiceDescriptor:ServiceClientConstructor = getProtoDescriptor('protos/notify_service.proto').NotifyService;
         this.client = new notifyServiceDescriptor(this.address, grpc.credentials.createInsecure())
@@ -31,10 +29,10 @@ export class Client extends EventEmitter {
         })
     }
 
-    keepNotify() {
+    keepNotify(callback:(data:any)=>void) {
         const call:ServerReadableStream<any,any> = this.client.keepNotify({ok:true});
         call.on('data', (data:MessageJsonData)=> {
-            this.emit('notify',JSON.parse(data.json))
+            callback(JSON.parse(data.json))
         });
         call.on('error', (error)=> {
             this.logger.error('client keepNotify call is error: %O',error)
