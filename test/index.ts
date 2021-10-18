@@ -4,9 +4,10 @@ import {Service, Client} from '../index'
 const testUnit = {
     [Symbol('Service.Start')] : async function() {
         const service1  = new Service({
-            partnerList:['0.0.0.0:8081']
+            partnerList:[]
         })
         await service1.start('0.0.0.0:8080')
+        service1.setPartnerList(['0.0.0.0:8081'])
         const service2  = new Service({
             partnerList:['0.0.0.0:8080']
         })

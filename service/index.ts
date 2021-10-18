@@ -57,6 +57,13 @@ export class Service {
         return this.server.forceShutdown()
     }
 
+    public getPartnerList():Array<string> {
+        return this.partnerList
+    }
+    public setPartnerList(partnerList:Array<string>):Array<string> {
+        return this.partnerList = partnerList;
+    }
+
     private getNotifyService() {
         return {
             ping:async(call:ServerWritableStream<any,any>, callback:(error:Error,resp:MessageIsOk)=>void) => {
